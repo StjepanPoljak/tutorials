@@ -36,37 +36,95 @@ Note: Stack pointer must point to a 16-byte aligned address (as opposed to 8-byt
 
 A64 is the instruction set available in AArch64 state.
 
+### Move instructions
+
+|      instruction      |           alias          |
+|-----------------------|--------------------------|
+|   `mov <Rd>, <Rs>`    |  `orr <Rd>, xzr, <Rs>`   |
+|   `mov <Rd>, #imm`    | `movk`, `movz` or `movn` |
+
+ * `movk` moves an immediate to the destination register, but leaves other bits unchanged
+ * `movz` moves an immediate to the destination and sets other bits to zero
+ * `movn` moves an immediate to the destination register and negates it (used to move bitmasks)
+
+Note: If stack pointer is used with `mov`, the instruction becomes `add`.
+
+### Load and store
+
+|         instruction         |                 description                 |
+|-----------------------------|---------------------------------------------|
+|      `ldr <Rd>, =imm`       |          loads immediate into `<Rd>`        |
+| `ldr <Rd>, [<Rs>, #offset]` | loads value from `<Rs> + #offset` to `<Rd>` |
+| `str <Rs>, [<Rd>, #offset]` | store value from `<Rs>` to `<Rd> + #offset` |
+
 ### Arithmetic operations
 
-|    instruction    |     formula     |
-|-------------------|-----------------|
-| `add Rd, Rm, Rn`  | `Rd = Rm + Rn`  |
-| `sub Rd, Rm, Rn`  | `Rd = Rm - Rn`  |
-| `mul Rd, Rm, Rn`  | `Rd = Rm * Rn`  |
+|       instruction      |     formula     |
+|------------------------|-----------------|
+| `add <Rd>, <Rm>, <Rn>` | `Rd = Rm + Rn`  |
+| `sub <Rd>, <Rm>, <Rn>` | `Rd = Rm - Rn`  |
+| `mul <Rd>, <Rm>, <Rn>` | `Rd = Rm * Rn`  |
 
 ### Logical bitwise operations
 
-|    instruction    |     formula     |
-|-------------------|-----------------|
-| `and Rd, Rm, Rn`  | `Rd = Rm & Rn`  |
-| `bic Rd, Rm, Rn`  | `Rd = Rm & ~Rn` |
-| `orr Rd, Rm, Rn`  | `Rd = Rm \| Rn` |
-| `eor Rd, Rm, Rn`  |`Rd = Rm XOR Rn` |
+|       instruction      |     formula     |
+|------------------------|-----------------|
+| `and <Rd>, <Rm>, <Rn>` | `Rd = Rm & Rn`  |
+| `bic <Rd>, <Rm>, <Rn>` | `Rd = Rm & ~Rn` |
+| `orr <Rd>, <Rm>, <Rn>` | `Rd = Rm \| Rn` |
+| `eor <Rd>, <Rm>, <Rn>` |`Rd = Rm XOR Rn` |
 
 Note: The `bic` instruction is a "reverse mask". That is, where `Rs` is `1`, it will set the bits in `Rd` to `0`.
 
-### Compare and Branch
+### Compare
+
+To compare two registers:
+
+```
+cmp <Rm>, <Rn>
+b.<code> <label>
+```
+
+For example, the following code snippet will jump to `label1` if value in `x0` is lower than or equal to value in `x1`:
+
+```
+cmp x0, x1
+b.le label1
+```
+
+#### Condition codes
+
+| code |       meaning      |            flag            |
+|------|--------------------|----------------------------|
+| `eq` |        equal       |         `Z` is set         |
+| `ne` |      not equal     |       `Z` is not set       |
+| `ge` |  greater or equal  |          `N == V`          |
+| `gt` |    greater than    |  `N == V`, `Z` is not set  |
+| `le` |    less or equal   |          `N != V`          |
+| `lt` |      less than     |  `N != V`, `Z` is not set  |
+| `cs` |      carry set     |         `C` is set         |
+| `cc` |     carry clear    |       `C` is not set       |
+| `mi` |        minus       |         `N` is set         |
+| `pl` |  positive or zero  |       `N` is not set       |
+| `vs` |  signed overflow   |         `V` is set         |
+| `vs` | no signed overflow |       `V` is not set       |
+| `hi` |       higher       | `C` is set, `Z` is not set |
+| `hs` |   higher or same   |         `C` is set         |
+| `lo` |       lower        |       `C` is not set       |
+| `ls` |   lower or same    | `C` not set or `Z` is set  |
+
+#### Compare and Branch
 
 Compare and branch to label if Rs is zero:
 
 ```
-cbz Rs, label
+cbz <Rs>, <label>
 ```
 
 Compare and branch to label if Rs is not zero:
 
 ```
-cbnz Rs, label
+cbnz <Rs>, <label>
 ```
 
 ## Exception Level
@@ -157,7 +215,7 @@ mrs Rd, <system register>
 Used to identify CPU cores and clusters. Read with:
 
 ```
-mrs Rd, mpidr_el1
+mrs <Rd>, mpidr_el1
 ```
 
 For example, to find out the core on which the code is running:
@@ -174,7 +232,7 @@ Register `x0` will contain core ID.
 Use the following command to get the current exception level:
 
 ```
-mrs Rd, CurrentEL
+mrs <Rd>, CurrentEL
 ```
 
 In fact, the exception level is contained in bits `3:2`, so something like this is very useful:
@@ -195,6 +253,18 @@ When taking an exception to ELx, holds the address to return to. For usage, see 
 
 ### Saved Program Status Register
 
+Defined for EL3, EL2 and EL1. The `spsr_elx` holds the saved process state when an exception is taken to ELx. Most important bits:
+
+ * NZCV (31-28): condition flags
+ * DAIF (9-6): exception and interrupt masks
+ * M (3:0): exception level and selected stack pointer
+
+To set, use, e.g.:
+
+```
+msr spsr_el3, <Rs>
+```
+
 ### Secure Configuration Register
 
 Called from EL3 only. Defines the configuration of the current Security state. Most important bits are:
@@ -210,7 +280,7 @@ Note: Except IRQs, it also configures whether exceptions and other various opera
 To set, use, e.g.:
 
 ```
-msr scr_el3, Rm
+msr scr_el3, <Rs>
 ```
 
 ### Hypervisor Configuration Register
@@ -224,7 +294,7 @@ Can be called from EL3 and EL2. Provides configuration controls for virtualizati
 To set, use, e.g.:
 
 ```
-msr hcr_el2, Rm
+msr hcr_el2, <Rs>
 ```
 
 # Notes
