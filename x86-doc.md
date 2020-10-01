@@ -15,6 +15,8 @@
  * **80386** (1985): x86-32, 32-bit extension of 80286 architecture
  * **80486** (1989): x86 including x87 (except SX models), over million transistors
 
+Note: The x87 is a separate architecture for the FPU accompanying x86.
+
 ## Relevant microarchitectures
 
  * **P5** (1993): IA-32, MMX ISA, Pentium series
@@ -22,6 +24,8 @@
  * **NetBurst** (2000): NetBurst x86, MMX ISA, Celeron, Pentium, Xeon
  * **Intel Itanium (IA-64)** (2001): 64-bit, ISA originated at Hewlett-Packard
  * **Intel Core** (2006): Intel Core x86, MMX ISA, Celeron, Pentium, Xeon
+
+Note: [MMX](#MMX) is an ISA extension.
 
 ## Tick-Tock production model
 
@@ -37,6 +41,84 @@
 # x86
 
 ## Registers
+
+The x86 architecture has 8 GPRs, 6 Segment Registers, 1 Flags Register and an Instruction Pointer.
+
+### General Purpose Registers
+
+The table for 16-bit GPRs:
+
+|  register  |       meaning      |                 purpose                |
+|------------|--------------------|----------------------------------------|
+|     AX     | arithmetic         | for arithmetic operations              |
+|     CX     | counter            | used in loops and shift operations     |
+|     DX     | data               | for I/O and arithmetic operations      |
+|     BX     | base               | pointer to data                        |
+|     SP     | stack pointer      | points to top of the stack             |
+|     BP     | stack base pointer | points to base of the stack            |
+|     SI     | source index       | pointer to source in stream operations |
+|     DI     | destination index  | pointer to destination in stream ops.  |
+
+Registers AX, CX, DX and BX are divided in two registers each, e.g.:
+
+<table>
+	<tbody>
+		<tr>
+			<td colspan="2" align="center">AX</td>
+			<td align="center">AH</td>
+			<td align="center">AL</td>
+		</tr>
+	</tbody>
+</table>
+
+The register AH represents higher 8-bit part of AX, and AL lower 8-bit part of AX. Registers SP, BP, SI, and DI don't have only lower 8-bit counterparts called SPL, BPL, SIL and DIL, respectively.
+
+Note: In IA-32, AX, CX, DX, BX, SP, BP, SI and DI are lower-half 16-bit registers of their 32-bit counterparts, where they are prefixed with an "E" (short for "Extended"), so they are called EAX, ECX, EDX, EBX, ESP, EBP, ESI, EDI. In x86-64 registers EAX, ECX, EDX, EBX, ESP, EBP, ESI and EDI are lower 32-bit registers of their 64-bit counterparts, called RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI. The "R" prefix stands for "Register".
+
+### Segment Registers
+
+The table for segment registers:
+
+|  register  |       meaning     |                 purpose                |
+|------------|-------------------|----------------------------------------|
+|     SS     | stack segment     | pointer to the stack                   |
+|     CS     | code segment      | pointer to the code                    |
+|     DS     | data segment      | pointer to the data                    |
+|     ES     | extra segment     | pointer to extra data                  |
+|     FS     | F segment (extra) | pointer to extra data (after E)        |
+|     GS     | G segment (extra) | pointer to extra data (after F)        |
+
+Note: On most modern operating systems, the use of these registers is deprecated (except FS and GS which are used to point to thread-specific data).
+
+### MMX
+
+MMX is an ISA extension to x86, introduced with the P5 Pentium series. It's basically a set of macros that make 64-bit aliases out of x87's 80-bit registers. The "new" registers are:
+
+```
+%mmx0, %mmx1, ..., %mmx7
+```
+
+This way, things stayed backward compatible. To find out if you have MMX, you can see on Linux with:
+
+```
+cat /proc/cpuinfo | grep mmx
+```
+
+To check for existence of MMX in assembly, use the `cpuid` instruction (x86-64 example):
+
+```
+_is_mmx_available:
+	pushq   %rbx
+
+	movq    $1, %rax
+	cpuid
+	movq    %rdx, %rax
+	shrq    $23, %rax
+	andq    $1, %rax
+
+	popq    %rbx
+	ret
+```
 
 # Notes
 
