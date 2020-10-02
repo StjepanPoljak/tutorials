@@ -2,9 +2,9 @@
 
 A32 is the instruction set named ARM in the ARMv7 architecture; A32 uses 32-bit fixed-length instructions.
 
-# ARMv8
+# ARMv8-A
 
-AArch64 and AArch32 are the 64-bit and 32-bit general-purpose register width states of the ARMv8 architecture. Aarch32 is broadly compatible with the ARMv7-A architecture.
+AArch64 and AArch32 are the 64-bit and 32-bit general-purpose register width states of the ARMv8-A architecture. Aarch32 is broadly compatible with the ARMv7-A architecture.
 
 ## Registers
 
@@ -128,6 +128,47 @@ Compare and branch to label if Rs is not zero:
 ```
 cbnz <Rs>, <label>
 ```
+
+### Memory barriers
+
+#### Data Memory Synchronization Barrier (DMB)
+
+Ensures all memory accesses are finished before another memory access is made.
+
+```
+dmb [nsh|ish|osh|sy][ld|st]
+```
+
+Used for `smp_*mb()` in the Linux kernel (ensures correct data is seen in memory across all cores).
+
+#### Data Synchronization Barrier (DSB)
+
+Ensures all memory accesses are finished before the next instruction is executed.
+
+```
+dsb [nsh|ish|osh|sy][ls|st]
+```
+
+Used for `*mb()` in the Linux Kernel (most useful in device driver programming, e.g. if we want to make sure that a memory store is complete when the device accesses it).
+
+### Instruction Synchronization Barrier (ISB)
+
+Ensures that all previous instructions are completed before the next instruction is executed. Flushes CPU pipeline.
+
+```
+isb [sy]
+```
+
+#### Shareability domains
+
+|       domain      | code  |
+|-------------------|-------|
+|   Non-shareable   | `nsh` |
+|  Inner Shareable  | `ish` |
+|  Outer Shareable  | `osh` |
+|     Full system   | `sy`  |
+
+Note: You can take a look at how `mb()` and `smp_mb()` are implemented in the Linux kernel [here](https://elixir.bootlin.com/linux/latest/source/tools/arch/arm64/include/asm/barrier.h).
 
 ## Stack setup
 
