@@ -1,10 +1,10 @@
 # Introduction
 
-You can find [ISA specification](https://riscv.org/technical/specifications/) on the [official RISC-V](https://riscv.org) web site.
+You can find [ISA specification](https://riscv.org/technical/specifications/) on the [official RISC-V](https://riscv.org) web site. Also, you can find [opcodes](https://github.com/riscv/riscv-opcodes) on official RISC-V [github page](https://github.com/riscv).
 
 ## RV32I
 
-RV32I is intended to be sufficient to form compiler target and to support most modern operating systems. RV32E is the embedded version of RV32I.
+RV32I is intended to be sufficient to form compiler target and to support most modern operating systems. RV32E is the embedded version of RV32I. Opcodes for RV32I are listed officially [here](https://raw.githubusercontent.com/riscv/riscv-opcodes/master/opcodes-rv32i).
 
 ### Registers
 
@@ -24,7 +24,6 @@ RV32I is intended to be sufficient to form compiler target and to support most m
 | `x18 - x27`  |`s2 - s11` | callee saved / temporary        |
 | `x28 - x31`  | `t3 - t6` | temporary registers             |
 
-
 ### Move instruction
 
 The move instruction `mv <Rd>, <Rs>` is just an alias for `addi <Rd>, <Rs>, 0`.
@@ -36,7 +35,7 @@ The move instruction `mv <Rd>, <Rs>` is just an alias for `addi <Rd>, <Rs>, 0`.
 The main syntax to load data to `<Rd>` from address stored in `<Rs>` is: 
 
 ```
-l[b|h|w|d] <Rd>, <offset>(<Rs>)
+l[b|bu|h|hu|w|d] <Rd>, <offset>(<Rs>)
 ```
 
 For example, to load a byte into `t0` from address in `sp` with offset `16`:
@@ -68,6 +67,8 @@ Note: The `[b|h|w|d]` options refers to the size of memory being loaded (or stor
 | `w`  |     word    | `32` |
 | `d`  | double word | `64` |
 
+Note: The `lbu` and `lhu` instructions are same as `lb` and `lh`, respectively, except they zero-out the upper bits.
+
 ### Arithmetic operations
 
 |       instruction      |        formula        |
@@ -84,5 +85,5 @@ Note: The `[b|h|w|d]` options refers to the size of memory being loaded (or stor
 |       instruction      |        formula        |
 |------------------------|-----------------------|
 | `and <Rd>, <Rm>, <Rn>` |    `Rd = Rm & Rn`     |
-| `or <Rd>, <Rm>, <Rn>`  |    `Rd = Rm | imm`    |
+| `or <Rd>, <Rm>, <Rn>`  |   `Rd = Rm \| imm`    |
 | `xor <Rd>, <Rm>, <Rn>` |   `Rd = Rm XOR Rn`    |
