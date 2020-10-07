@@ -27,7 +27,7 @@ Note: The x87 is a separate architecture for the FPU accompanying x86.
 
 Note: [MMX](#MMX) is an ISA extension.
 
-## Tick-Tock production model
+## Tick-Tock production model era
 
  * **Penryn** (2008): "tick", shrink of Core to 45nm, Celeron, Pentium, Xeon
  * **Nehalem** (2008): "tock", 45nm, differs from NetBurst, MMX ISA, Pentium, Core, Xeon
@@ -37,6 +37,15 @@ Note: [MMX](#MMX) is an ISA extension.
  * **Haswell** (2013): "tock", successor to Ivy bridge, 22nm, Core, Xeon, Pentium, Celeron
  * **Broadwell** (2014): "tick", 14nm shrink of Haswell, Core, Celeron, Pentium, Xeon
  * **Skylake** (2015): "tock", successor to Broadwell, 14nm, Core, Xeon, Pentium, Celeron
+
+Note: Usually, "tick" refers to an improvement in production process (i.e. nm shrink), and "tick" to a change in (micro)architecture.
+
+## Skylake successors
+
+ * **Kaby Lake** (2016) - microarchitecture, Skylake improvement, 14nm, Core, Celeron, Xeon, Pentium
+ * **Coffee Lake** (2017) - for desktop use, 14nm, Celeron, Pentium Gold, Core, Xeon
+ * **Whiskey Lake** (2018) - for mobile use, 14nm, Celeron, Pentium, Core
+ * **Cascade Lake** (2019) - for servers, 14nm, Core, Xeon
 
 # x86
 
