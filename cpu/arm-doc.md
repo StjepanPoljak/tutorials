@@ -1,12 +1,8 @@
-# ARMv7
+# Introduction
 
-A32 is the instruction set named ARM in the ARMv7 architecture; A32 uses 32-bit fixed-length instructions.
+A32 is the instruction set named ARM in the ARMv7 architecture; A32 uses 32-bit fixed-length instructions. AArch64 and AArch32 are the 64-bit and 32-bit general-purpose register width states of the ARMv8-A architecture. Aarch32 is broadly compatible with the ARMv7-A architecture. A64 is the instruction set available in AArch64 state.
 
-# ARMv8-A
-
-AArch64 and AArch32 are the 64-bit and 32-bit general-purpose register width states of the ARMv8-A architecture. Aarch32 is broadly compatible with the ARMv7-A architecture.
-
-## Registers
+# Registers
 
 |   register   |             purpose              |
 |--------------|----------------------------------|
@@ -30,11 +26,9 @@ Note: The corresponding 32-bit registers are prefixed by `w` (word) instead of `
 
 Note: More information on register and procedure conventions (AAPCS64) for AArch64 can be found [here](https://developer.arm.com/documentation/ihi0055/c/).
 
-## A64
+# A64 ISA
 
-A64 is the instruction set available in AArch64 state.
-
-### Move instructions
+## Move instructions
 
 |      instruction      |           alias          |
 |-----------------------|--------------------------|
@@ -47,7 +41,7 @@ A64 is the instruction set available in AArch64 state.
 
 Note: If stack pointer is used with `mov`, the instruction becomes `add`.
 
-### Load and store
+## Load and store
 
 |            instruction            |                   description                  |
 |-----------------------------------|------------------------------------------------|
@@ -59,7 +53,7 @@ Note: If stack pointer is used with `mov`, the instruction becomes `add`.
 
 Note: The `ldr <Rd>, =imm` is a pseudo-instruction, and a convenient way to put 64-bit values into a register.
 
-### Arithmetic operations
+## Arithmetic operations
 
 |       instruction      |     formula     |
 |------------------------|-----------------|
@@ -67,7 +61,7 @@ Note: The `ldr <Rd>, =imm` is a pseudo-instruction, and a convenient way to put 
 | `sub <Rd>, <Rm>, <Rn>` | `Rd = Rm - Rn`  |
 | `mul <Rd>, <Rm>, <Rn>` | `Rd = Rm * Rn`  |
 
-### Logical bitwise operations
+## Logical bitwise operations
 
 |       instruction      |     formula     |
 |------------------------|-----------------|
@@ -78,7 +72,7 @@ Note: The `ldr <Rd>, =imm` is a pseudo-instruction, and a convenient way to put 
 
 Note: The `bic` instruction is a "reverse mask". That is, where `Rs` is `1`, it will set the bits in `Rd` to `0`.
 
-### Compare
+## Compare
 
 To compare two registers:
 
@@ -94,7 +88,7 @@ cmp x0, x1
 b.le label1
 ```
 
-#### Condition codes
+### Condition codes
 
 | code |       meaning      |            flag            |
 |------|--------------------|----------------------------|
@@ -115,7 +109,7 @@ b.le label1
 | `lo` |       lower        |       `C` is not set       |
 | `ls` |   lower or same    | `C` not set or `Z` is set  |
 
-#### Compare and Branch
+### Compare and Branch
 
 Compare and branch to label if Rs is zero:
 
@@ -129,9 +123,9 @@ Compare and branch to label if Rs is not zero:
 cbnz <Rs>, <label>
 ```
 
-### Memory barriers
+## Memory barriers
 
-#### Data Memory Synchronization Barrier (DMB)
+### Data Memory Synchronization Barrier (DMB)
 
 Ensures all memory accesses are finished before another memory access is made.
 
@@ -141,7 +135,7 @@ dmb [nsh|ish|osh|sy][ld|st]
 
 Used for `smp_*mb()` in the Linux kernel (ensures correct data is seen in memory across all cores).
 
-#### Data Synchronization Barrier (DSB)
+### Data Synchronization Barrier (DSB)
 
 Ensures all memory accesses are finished before the next instruction is executed.
 
@@ -151,26 +145,43 @@ dsb [nsh|ish|osh|sy][ls|st]
 
 Used for `*mb()` in the Linux Kernel (most useful in device driver programming, e.g. if we want to make sure that a memory store is complete when the device accesses it).
 
+Note: You can take a look at how `mb()` and `smp_mb()` are implemented in the Linux kernel [here](https://elixir.bootlin.com/linux/latest/source/tools/arch/arm64/include/asm/barrier.h).
+
+Note: One example of mutex implementation is as follows:
+
+```
+lock_mutex:
+	/* code to check if mutex is locked
+	 * if locked:
+	 * 	wfeeq
+	 *	goto lock_mutex
+	 * try to lock mutex, if fails:
+	 *	goto lock_mutex */
+
+	dmb	/* required before accessing
+		 * protected resources */
+
+unlock_mutex:
+	dmb	/* ensure accesses to protected
+		 * resource have completed */
+	/* set mutex as unlocked */
+	dsb	/* ensure update of the mutex
+		 * occurs before other CPUs
+		 * wake */
+	/* send event to other CPUs, wakes any
+	 * CPU waiting with wte:
+	 *	sev */
+```
+
 ### Instruction Synchronization Barrier (ISB)
 
-Ensures that all previous instructions are completed before the next instruction is executed. Flushes CPU pipeline.
+Ensures that all previous instructions are completed before the next instruction is executed. Flushes CPU pipeline. Should be used after changes in MMU / EL configuration to ensure proper privilege bits are being used.
 
 ```
 isb [sy]
 ```
 
-#### Shareability domains
-
-|       domain      | code  |
-|-------------------|-------|
-|   Non-shareable   | `nsh` |
-|  Inner Shareable  | `ish` |
-|  Outer Shareable  | `osh` |
-|     Full system   | `sy`  |
-
-Note: You can take a look at how `mb()` and `smp_mb()` are implemented in the Linux kernel [here](https://elixir.bootlin.com/linux/latest/source/tools/arch/arm64/include/asm/barrier.h).
-
-## Stack setup
+# Stack setup
 
 The usual procedure is to allocate space in the link script for the stack, so that the stack address points to the higher memory address:
 
@@ -189,7 +200,7 @@ mov sp, x0
 
 Note: Stack pointer must point to a 16-byte aligned address (as opposed to 8-byte in AArch32).
 
-### Procedure call standard
+## Procedure call standard
 
 To call a procedure (or colloquially, function), use:
 
@@ -211,7 +222,7 @@ function:
 	ret
 ```
 
-## Exception Level
+# Exception Level
 
 In ARMv8, there are four exception levels:
 
@@ -220,7 +231,7 @@ In ARMv8, there are four exception levels:
  * **EL2** - hypervisor
  * **EL3** - secure monitor (firmware)
 
-### Change Exception Level
+## Change Exception Level
 
 In order to change exception level, you have to:
 
@@ -231,11 +242,11 @@ In order to change exception level, you have to:
  * call `eret`
  * setup stack and IRQ vector table
 
-### Hypervisor
+## Hypervisor
 
 Hypervisor provides same abstraction for the operating system as operating system provides for user-space applications.
 
-#### Type 1 (Bare-Metal) Hypervisor
+### Type 1 (Bare-Metal) Hypervisor
 
 Bare metal hypervisor sits directly on hardware. Xen Project is one example.
 
@@ -260,7 +271,7 @@ Bare metal hypervisor sits directly on hardware. Xen Project is one example.
 	</tbody>
 </table>
 
-#### Type 2 (Hosted) Hypervisor
+### Type 2 (Hosted) Hypervisor
 
 Hosted hypervisor runs on top of an OS (or are part of one, like KVM is part of Linux).
 
@@ -285,11 +296,22 @@ Hosted hypervisor runs on top of an OS (or are part of one, like KVM is part of 
 	</tbody>
 </table>
 
-### Configuration
+## Configuration
 
 Hypervisor is configured via [Hypervisor Configuration Register](#Hypervisor-Configuration-Register).
 
-## IRQ vector setup
+# Memory Management
+
+## Shareability domains
+
+Shareability domains define zones within the bus topology within which memory accesses are to be kept consistent and potentially coherent. Outside of this domain, observers might not see the same order of memory accesses as inside it.
+
+ * Non-shareable domain (`nsh`) - accesses that never need to be synchronized with other cores, processors or devices (not for SMP)
+ * Inner Shareable (`ish`) - domain potentially shared by multiple agents (but usually not all); an operation that affects one ISH domain does not affect other ISHs in the system
+ * Outer Shareable (`osh`) - consists of multiple ISHs; an operation that affects an OSH also implicitly affects all ISHs inside it (device memory accesses are considered OSH, usually)
+ * Full system (`sy`) - an operation on the full system affects all agents in the system (simple peripherals such as UARTs are usually running here)
+
+# IRQ vector setup
 
 To setup the IRQ vector, first make a label that is 4096-byte aligned. Then, each vector entry should be 128-byte aligned. There are four groups of entries, with four subgroups:
 
@@ -374,13 +396,15 @@ Note: The `vbar_elx` is defined for EL3, EL2 and EL1.
 
 Note: Depending on your CPU, you may need to enable IRQs in a CPU-specific register.
 
-## System registers
+# System registers
 
 You can find an extensive list of AArch64 System Registers [here](https://developer.arm.com/docs/ddi0595/h/aarch64-system-registers). Usually, each system register can be read by using:
 
 ```
 mrs Rd, <system register>
 ```
+
+## General CPU
 
 ### Multiprocessor Affinity Register
 
@@ -399,7 +423,9 @@ and x0, x0, 0xFF
 
 Register `x0` will contain core ID.
 
-### Current Exception Level Register
+## Exception level
+
+### Current Exception Level Register (`CurrentEL`)
 
 Use the following command to get the current exception level:
 
@@ -419,11 +445,11 @@ and \reg, \reg, #0xFF
 
 Then, you can simply get current EL to e.g. `x0` by calling `curr_el_to x0`.
 
-### Exception Link Register
+### Exception Link Register (`ELR_ELn`)
 
 When taking an exception to ELx, holds the address to return to. For usage, see [Change Exception Level](#Change-Exception-Level) section. Defined for EL3, EL2 and EL1.
 
-### Saved Program Status Register
+### Saved Program Status Register (`SPSR_ELn`)
 
 Defined for EL3, EL2 and EL1. The `spsr_elx` holds the saved process state when an exception is taken to ELx. Most important bits:
 
@@ -437,7 +463,7 @@ To set, use, e.g.:
 msr spsr_el3, <Rs>
 ```
 
-### Secure Configuration Register
+### Secure Configuration Register (`SCR_EL3`)
 
 Called from EL3 only. Defines the configuration of the current Security state. Most important bits are:
 
@@ -455,9 +481,9 @@ To set, use, e.g.:
 msr scr_el3, <Rs>
 ```
 
-### Hypervisor Configuration Register
+### Hypervisor Configuration Register (`HCR_EL2`)
 
-Can be called from EL3 and EL2. Provides configuration controls for virtualization, including defining whether various operations are trapped to EL2. The most important bits are:
+Can be called from EL3 and EL2, but for real software stack it should be called only in EL2. Provides configuration controls for virtualization, including defining whether various operations are trapped to EL2. The most important bits are:
 
  * IMO (4): physical IRQ routing
  * HCD (29): HVC instruction disable
@@ -468,6 +494,29 @@ To set, use, e.g.:
 ```
 msr hcr_el2, <Rs>
 ```
+
+## MMU
+
+### Translation Table Base Register (`TTBRm_ELn`)
+
+Holds the base address of the translation table for the initial lookup for stage 1 of the translation of an address. The `TTBR0_ELn` register is for lower virtual address range (userspace), while `TTBR1_ELn` is for higher virtual address range (kernel / OS). Both are implemented for EL1 and EL2, but `TTBR0_ELn` is additionally available in EL3.
+
+To set, first reserve memory for level 1 table (address set to `tt_l1_base`) and fill it with zeros. Then use, e.g.:
+
+```
+adr x0, tt_l1_base
+msr ttbr0_el1, x0
+```
+
+The TTBR contains following bits:
+
+ * ASID (63-48) - address-spaced identifier (used to differentiate between cache entries used by e.g. different processes)
+ * BADDR (47-1) - translation table base address
+ * CnP (0) - common not private bit (if `FEAT_TTCNP` implemented, otherwise reserved)
+
+### Memory Attribute Indirection Register (`MAIR_ELn`)
+
+Implemented for EL1, EL2 and EL3. Provides the memory attribute encodings corresponding to the possible `AttrIndx` values in a Long-descriptor format translation table entry for stage 1 translations. Check ARM documentation for details.
 
 # Notes
 
