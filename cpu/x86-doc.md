@@ -74,6 +74,8 @@ Registers AX, CX, DX and BX are divided in two registers each, e.g.:
 	<tbody>
 		<tr>
 			<td colspan="2" align="center">AX</td>
+		</tr>
+		<tr>
 			<td align="center">AH</td>
 			<td align="center">AL</td>
 		</tr>
@@ -132,5 +134,4 @@ _is_mmx_available:
 # Notes
 
 You can find extensive documentation on x86 architecture [here](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html).
-
 

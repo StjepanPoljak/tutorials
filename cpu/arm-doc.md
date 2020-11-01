@@ -518,6 +518,13 @@ The TTBR contains following bits:
 
 Implemented for EL1, EL2 and EL3. Provides the memory attribute encodings corresponding to the possible `AttrIndx` values in a Long-descriptor format translation table entry for stage 1 translations. Check ARM documentation for details.
 
+#### Transient Attribute
+
+ * **Transient** - benefit of caching is for a relatively short period
+ * **Non-Transient** - opposite of Transient
+
+Note: Usually, it's not worth worrying about transient attribute, unless dealing with very specific requirements.
+
 # Notes
 
 The best place to find information on ARM (Acorn RISC Machines) Architecture is [here](https://developer.arm.com/documentation/).

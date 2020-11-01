@@ -108,3 +108,38 @@ If PTE has a dirty bit set for a page it points to, that means that the page has
 ### Page fault
 
 If PTE points to disk, CPU generates a page fault exception. The hardware then jumps to the OS page fault handler. The OS will choose a page to evict from RAM and if the page to be evicted is marked as dirty, it will be saved to disk. The page that is alredy located in the disk (pointed to by PTE) is read to RAM and PTE is updated.
+
+## Cache
+
+### Types
+
+ * **Physically Indexed Physically Tagged (PIPT)** - simple and avoids problems with aliasing, but slow
+ * **Virtually Indexed Virtually Tagged (VIVT)** - faster lookups, but suffers from aliasing as several different virtual addresses may refer to the same physical address
+ * **Virtually Indexed Physically Tagged (VIPT)** - lower latency cache line can be looked up in parallel with the TLB translation, but the tag cannot be compared until physical address is available
+ * **Physically Indexed Virtually Tagged (PIVT)** - considered useless and non-existing (MIPS R6000 the only implementation)
+
+Note: Most modern L1 caches are virtually indexed.
+
+### Policies
+
+#### Write-Hit policies
+
+Write-Hit occurs when data being modified is found in the cache.
+
+ * **Write-Back** - if data is modified, write it only to cache; data is written back to memory only when it is being replaced in cache (multiple writes within a block require only one write to main memory, but reads that result in replacement may cause writes of dirty blocks to main memory)
+ * **Write-Through** - data is written both to cache and to memory when it is modified (read miss never results in writes to main memory which always has the most current copy of the data, but it can impact performance when writing)
+
+#### Write-Miss policies
+
+Write-Miss occurs when data being modified is not found in the cache.
+
+ * **Write Allocate** - the block is loaded on a write-miss, followed by the write-hit action
+ * **No Write Allocate** - the block is modified in the memory and not loaded into the cache
+
+Note: Write-Back is generally used with Write Allocate (hoping that subsequent writes to that block will be captured by the cache), and Write-Through with No Write Allocate (since subsequent writes to that block will still have to go to memory).
+
+Note: The Read-Miss policies are analogous to the Write-Miss policies. Also note that there are only three kinds of cache misses: instruction read miss, data read miss and data write miss.
+
+Note: For simplicity we assumed only one level of cache; usually the communication goes through several layers of cache until the main memory is reached.
+
+
