@@ -300,7 +300,9 @@ Hosted hypervisor runs on top of an OS (or are part of one, like KVM is part of 
 
 Hypervisor is configured via [Hypervisor Configuration Register](#Hypervisor-Configuration-Register).
 
-# Memory Management
+# Memory Management (MMU)
+
+Introductory notes on ARM memory management can be found [here](https://developer.arm.com/architectures/learn-the-architecture/memory-management).
 
 ## Shareability domains
 

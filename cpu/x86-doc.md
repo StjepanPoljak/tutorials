@@ -131,6 +131,37 @@ _is_mmx_available:
 	ret
 ```
 
+## Descriptor Tables
+
+### Global Descriptor Table (GDT)
+
+One table entry in GDT contains following two 32-bit parts:
+
+|   bits   | size |        usage        |
+|----------|------|---------------------|
+|   0:15   |  16  |    segment limit    |
+|  16:31   |  16  |     base address    |
+
+|   bits   | size |        usage        |
+|----------|------|---------------------|
+|   0:7    |  8   |        base         |
+|   8:11   |  4   |    segment type     |
+|    12    |  1   |   descriptor type   |
+|  13:14   |  2   |   privilege level   |
+|    15    |  1   |   segment present   |
+|  16:19   |  4   |        limit        |
+|    20    |  1   |         AVL         |
+|    21    |  1   | 64-bit code segment |
+|    22    |  1   |         D/B         |
+|    23    |  1   |     granularity     |
+|  24-31   |  8   |         base        |
+
+Note: If descriptor type is set to 1 (code or data), then first bit of descriptor type is "accessed flag". The value 0 for descriptor type implies system.
+
+Note: AVL means "available for use by system programmers".
+
+Note: 64-bit code segment is for IA-32 only, and D/B is default operation size (0 implies 16-bit segment, and 0 a 32-bit segment).
+
 # Notes
 
 You can find extensive documentation on x86 architecture [here](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html).

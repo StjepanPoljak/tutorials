@@ -1420,6 +1420,18 @@ See:
 :help 'smartcase'
 ```
 
+To highlight a search, use:
+
+```
+:set hlsearch
+```
+
+This is useful for finding unwanted whitespace, e.g. with:
+
+```
+/\s\+$
+```
+
 ### Shell
 
 To pipe input to a shell command, you can use the selection or visual block, and write something like this:
