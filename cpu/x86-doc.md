@@ -49,6 +49,60 @@ Note: Usually, "tick" refers to an improvement in production process (i.e. nm sh
 
 # x86
 
+## Boot Sector
+
+First, BIOS examines first 512 bytes of configured devices. If the 512B sector contains a magic number (`0x55aa`) at bits 510 and 511, BIOS will load that 512B sector to address `0x7c00` in RAM.
+
+### Example
+
+To write a simple boot sector, it's best to use link script:
+
+```
+SECTIONS{
+        . = 0x7c00;
+        .text : {
+                *(.text)
+                . = 510;
+                SHORT(0xAA55)
+        }
+}
+```
+
+### BIOS functions
+
+For full list of BIOS functions, counsult [this page](http://www.ctyme.com/intr/int.htm).
+
+| `int`  |  `ah`  |          description        |
+|--------|--------|-----------------------------|
+| `0x10` | `0x0c` | write pixel to `(cx, dx)`   |
+| `0x10` | `0x0e` | print char in `al`          |
+| `0x13` | `0x02` | read from disk to `es:bx`   |
+
+### Multiboot Header
+
+The simple [multiboot header](https://www.gnu.org/software/grub/manual/multiboot/multiboot.html) should contain at least:
+
+|       use       |  value / default   |
+|-----------------|--------------------|
+|    magic bits   |    `0x1badb002`    |
+|      flags      |    `0x00010003`    |
+|     checksum    | `-(flags + magic)` |
+|   header addr.  |        N/A         |
+|    code entry   |        N/A         |
+|  load end addr. |    `0x00000000`    |
+|  bss end addr.  |    `0x00000000`    |
+| multiboot entry |        N/A         |
+
+Note: All rows specify data of 4-byte size.
+
+Note: Flags here set:
+
+| bit |                 meaning                    |
+|-----|--------------------------------------------|
+| `0` | load boot modules and OS at 4kB boundaries |
+| `1` |           provide memory map               |
+|`16` | header / load address will be provided     |
+
 ## Registers
 
 The x86 architecture has 8 GPRs, 6 Segment Registers, 1 Flags Register and an Instruction Pointer.
