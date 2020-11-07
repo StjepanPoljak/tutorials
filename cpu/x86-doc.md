@@ -191,30 +191,60 @@ _is_mmx_available:
 
 One table entry in GDT contains following two 32-bit parts:
 
-|   bits   | size |        usage        |
-|----------|------|---------------------|
-|   0:15   |  16  |    segment limit    |
-|  16:31   |  16  |     base address    |
+|   bits   | size |         usage        |
+|----------|------|----------------------|
+|  `0:15`  | `2B` | segment limit (low)  |
+| `16:31`  | `2B` |  base address (low)  |
 
-|   bits   | size |        usage        |
-|----------|------|---------------------|
-|   0:7    |  8   |        base         |
-|   8:11   |  4   |    segment type     |
-|    12    |  1   |   descriptor type   |
-|  13:14   |  2   |   privilege level   |
-|    15    |  1   |   segment present   |
-|  16:19   |  4   |        limit        |
-|    20    |  1   |         AVL         |
-|    21    |  1   | 64-bit code segment |
-|    22    |  1   |         D/B         |
-|    23    |  1   |     granularity     |
-|  24-31   |  8   |         base        |
+|   bits   | size |         usage        |
+|----------|------|----------------------|
+|  `0:7`   | `1B` | base addr. (middle)  |
+|  `8:15`  | `1B` |     access bits      |
+| `16:19`  | `4`  | segment limit (high) |
+| `20:23`  | `4`  |        flags         |
+| `24:31`  | `1B` | base address (high)  |
 
-Note: If descriptor type is set to 1 (code or data), then first bit of descriptor type is "accessed flag". The value 0 for descriptor type implies system.
+Note: First entry in GDT is a null entry.
 
-Note: AVL means "available for use by system programmers".
+#### Access Bits (8:15)
 
-Note: 64-bit code segment is for IA-32 only, and D/B is default operation size (0 implies 16-bit segment, and 0 a 32-bit segment).
+ * accessed (0) - set this to 0 (CPU sets it to 1 when accessed)
+ * readable / writeable (1) - readable bit for code / writeable bit for data
+ * direction / conforming (2) - direction bit for data selector (0 - up, 1 - down); for code segment, for code, privilege (1 - this code segment can be executed from an equal or lower privilege level; 0 - this code segment can only be executed from the ring set in privilege bit)
+ * executable (3) - set to 1 for code, and to 0 for data
+ * descriptor type (4) - set 1 for code or data, and to 0 for system segments
+ * privilege (5:6) - ring level (0 - highest, i.e. kernel, 3 - lowest, i.e. user space)
+ * present (7) - must be 1 for all valid selectors
+
+Note: The preferred value for kernel conforming code is `0x9a`, and for kernel upward direction data is `0x92`.
+
+#### Flags (20:23)
+
+ * size (2) - if 0 the selector defines 16-bit protected mode, and if 1 it defines 32-bit protected mode
+ * granularity (1) - if 0, the limit is in 1B blocks, and if 1 it's 4096B
+
+Note: The bits 0 and 1 are zero.
+
+Note: The preferred value that sets 4kB granularity and 32-bit protected mode is `0xc'. Along with segment limit, that's `0xcf`.
+
+#### GDT Pointer
+
+|  bits  | size |    usage    |
+|--------|------|-------------|
+| `0:15` | `2B` |  GDT limit  |
+|`16:47` | `4B` |  GDT base   |
+
+Note: For GDT limit, calculate `n * 8 - 1`, where `n` is the number of GDT entries. For GDT base, load the address of GDT table.
+
+#### Load GDT
+
+To load GDT, use:
+
+```
+lgdt gdt_ptr
+```
+
+Here, `gdt_ptr` is the GDT pointer.
 
 # Notes
 
