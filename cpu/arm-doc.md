@@ -2,6 +2,16 @@
 
 A32 is the instruction set named ARM in the ARMv7 architecture; A32 uses 32-bit fixed-length instructions. AArch64 and AArch32 are the 64-bit and 32-bit general-purpose register width states of the ARMv8-A architecture. Aarch32 is broadly compatible with the ARMv7-A architecture. A64 is the instruction set available in AArch64 state.
 
+# Data types
+
+|   size   |      name     |
+|----------|---------------|
+|   `1B`   |     byte      |
+|   `2B`   |   half-word   |
+|   `4B`   | (single)-word |
+|   `8B`   |  double-word  |
+|  `16B`   |     quad      |
+
 # Registers
 
 |   register   |             purpose              |
