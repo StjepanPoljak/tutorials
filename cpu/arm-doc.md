@@ -43,13 +43,36 @@ Note: If stack pointer is used with `mov`, the instruction becomes `add`.
 
 ## Load and store
 
-|            instruction            |                   description                  |
-|-----------------------------------|------------------------------------------------|
-|         `ldr <Rd>, =imm`          |           loads immediate into `<Rd>`          |
-|    `ldr <Rd>, [<Rs>, #offset]`    |  loads value from `<Rs> + #offset` to `<Rd>`   |
-|    `str <Rs>, [<Rd>, #offset]`    |  store value from `<Rs>` to `<Rd> + #offset`   |
-| `ldp <Rm>, <Rn>, [<Rs>, #offset]` |  same as `ldr` but load to pair of registers   |
-| `stp <Rm>, <Rn>, [<Rs>, #offset]` | same as `str` but store from pair of registers |
+### Absolute addressing
+
+|            instruction            |                     description                     |
+|-----------------------------------|-----------------------------------------------------|
+|    `ldr <Rd>, [<Rs>, #offset]`    |    loads value from `<Rs> + #offset` to `<Rd>`      |
+|    `str <Rs>, [<Rd>, #offset]`    |    store value from `<Rs>` to `<Rd> + #offset`      |
+| `ldp <Rm>, <Rn>, [<Rs>, #offset]` |    same as `ldr` but load to pair of registers      |
+| `stp <Rm>, <Rn>, [<Rs>, #offset]` |   same as `str` but store from pair of registers    |
+
+Note: There are few variants to these instructions, for example:
+
+|            instruction            |                     description                     |
+|-----------------------------------|-----------------------------------------------------|
+|   `ldr <Rd>, [<Rs>, #offset]!`    | first, `<Rs> += #offset` and then performs the load |
+|    `ldr <Rd>, [<Rs>], #offset`    | first perform the load, and then `<Rs> += #offset`  |
+
+Note: The two above instructions are called pre-indexed and post-indexed loads, respectively.
+
+### Relative addressing
+
+The following instructions load addresses relative to current PC. For example `ldr x0, =0x1` will actually load `pc + 0x1` into `x0` register. So, if current PC is `0x1000`, the `x0` register will actually contain `0x1001`.
+
+|            instruction            |                     description                     |
+|-----------------------------------|-----------------------------------------------------|
+|         `adr <Rd>, label`         |         load address of label into `<Rd>`           |
+|         `adr <Rd>, .`             |             load current PC into `<Rd>`             |
+|         `adrp <Rd>, label`        | load address of 4kB page containing label to `<Rd>` |
+|         `ldr <Rd>, =imm`          |             loads immediate into `<Rd>`             |
+|         `ldr <Rd>, =label`        |           load label address into `<Rd>`            |
+|         `ldr <Rd>, label`         |      load value located at label into `<Rd>`        |
 
 Note: The `ldr <Rd>, =imm` is a pseudo-instruction, and a convenient way to put 64-bit values into a register.
 
