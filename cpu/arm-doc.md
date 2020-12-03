@@ -532,6 +532,17 @@ msr hcr_el2, <Rs>
 
 ## MMU
 
+There are four translation levels:
+
+| level | size of block |
+|-------|---------------|
+|  `0`  |    `512GB`    |
+|  `1`  |     `1GB`     |
+|  `2`  |     `2MB`     |
+|  `3`  |     `4kB`     |
+
+Translation table for each level has `512` entries of `8` bytes (`4kB` total).
+
 ### Translation Table Base Register (`TTBRm_ELn`)
 
 Holds the base address of the translation table for the initial lookup for stage 1 of the translation of an address. The `TTBR0_ELn` register is for lower virtual address range (userspace), while `TTBR1_ELn` is for higher virtual address range (kernel / OS). Both are implemented for EL1 and EL2, but `TTBR0_ELn` is additionally available in EL3.
@@ -559,6 +570,77 @@ Implemented for EL1, EL2 and EL3. Provides the memory attribute encodings corres
  * **Non-Transient** - opposite of Transient
 
 Note: Usually, it's not worth worrying about transient attribute, unless dealing with very specific requirements.
+
+## Page Table Entry (Descriptor)
+
+The first two bits (0-1) define the descriptor type:
+
+| value |        type       |  levels  |
+|-------|-------------------|----------|
+| `bx0` |       fault       |   all    |
+| `b11` |    table entry    |   1, 2   |
+| `b11` | table descriptor  |  0, 1, 2 |
+| `b01` |    block entry    |   1, 2   |
+
+Note: The difference between table entry and table descriptor is in the fact that table descriptor only points to the next level table.
+
+The other fields are described with:
+
+ * Indx (2-4) - pointer to entry in `MAIR_ELn`
+ * NS (5) - security bit (only for EL3 and Secure EL1)
+ * AP (6-7) - access permission
+ * SH (8-9) - shareability attribute
+ * AF (10) - access flag (set if accessed)
+ * PXN (53) - Privileged eXecute Never
+ * UXN (54) - Unprivileged eXecute Never
+
+The AP bits are described as follows:
+
+| value |    unprivileged (EL0)    |   privileged (EL1, EL2, EL3)   |
+|-------|--------------------------|--------------------------------|
+| `b00` |        no access         |         read and write         |
+| `b01` |     read and write       |         read and write         |
+| `b10` |        no access         |            read only           |
+| `b11` |        read only         |            read only           |
+
+For shareability attribute:
+
+| value |    shareability    |
+|-------|--------------------|
+| `b00` |    non-shareable   |
+| `b10` |   outer-shareable  |
+| `b11` |   inner-shareable  |
+
+## Virtual Address Format
+
+### 4kB granule
+
+| VA bits |      description      |
+|---------|-----------------------|
+| `0-11`  |        offset         |
+| `12-20` |  level 3 table index  |
+| `21-29` |  level 2 table index  |
+| `30-38` |  level 1 table index  |
+| `39-47` |  level 0 table index  |
+
+### 16kB granule
+
+| VA bits |      description      |
+|---------|-----------------------|
+| `0-13`  |        offset         |
+| `14-24` |  level 3 table index  |
+| `25-35` |  level 2 table index  |
+| `36-46` |  level 1 table index  |
+|  `47`   |  level 0 table index  |
+
+### 64kB granule
+
+| VA bits |      description      |
+|---------|-----------------------|
+| `0-15`  |        offset         |
+| `16-28` |  level 3 table index  |
+| `29-41` |  level 2 table index  |
+| `42-47` |  level 1 table index  |
 
 # Notes
 
