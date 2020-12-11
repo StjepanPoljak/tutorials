@@ -1263,7 +1263,7 @@ Note: Similarly, you can use `ramfs`; the only difference is the `ramfs` will gr
 | SCRL                |  `CTRL + a`   |
 | Open console        |  `SCRL + :`   |
 | Detach              |  `SCRL + d`   |
-| Split screen        |  `SCRL & |`   |
+| Split screen        |  `SCRL & \|`  |
 | Next screen         | `SCRL & TAB`  |
 | Close screen        |  `SCRL & X`   |
 | Create window       |  `SCRL & C`   |
