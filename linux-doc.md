@@ -1,6 +1,4 @@
-# Linux Tools
-
-## deb packages
+# deb packages
 
 You can install a `.deb` package by using:
 
@@ -15,15 +13,15 @@ Another alternative is `gdeb` which will install all the dependencies automatica
 sudo gdebi <deb_file>
 ```
 
-## Keyboard layout
+# Keyboard layout
 
 To list available keyboard layouts, try finding `keymaps` folder somewhere in `/usr/share/`.
 
-### Default
+## Default
 
 In the `keymaps` folder there is usually `defkeymap.kmap.gz` file. It can be reset to with `loadkeys -d`.
 
-### Get current
+## Get current
 
 To get current keyboard layout, use `dumpkeys`. On XServer, you can also see the layout with:
 
@@ -31,7 +29,7 @@ To get current keyboard layout, use `dumpkeys`. On XServer, you can also see the
 grep XKBLAYOUT /etc/default/keyboard
 ```
 
-### Change layout
+## Change layout
 
 To change keyboard layout, you can use:
 
@@ -45,7 +43,7 @@ This won't work on XServer, however. In this case, use:
 setxkbmap <layout>
 ```
 
-## Shell variables
+# Shell variables
 
 | var. |                 meaning                 |
 |------|-----------------------------------------|
@@ -56,7 +54,7 @@ setxkbmap <layout>
 | `$#` | number of arguments                     |
 | `$$` | current process pid                     |
 
-## System info
+# System info
 
 Find out if system is 32bit or 64bit:
 
@@ -74,7 +72,7 @@ armv7l
 
 For general system info, use `uname -a`.
 
-### System and service manager
+## System and service manager
 
 To check whether systemd or System V is used, type:
 
@@ -82,9 +80,9 @@ To check whether systemd or System V is used, type:
 [[ -e /run/systemd/system ]] && echo "systemd" || echo "System V"
 ```
 
-#### systemd
+### systemd
 
-##### Start program on boot
+#### Start program on boot
 
 Create a file with `.service` suffix in `/etc/systemd/system/` folder. It should minimally contain:
 
@@ -144,7 +142,7 @@ systemctl start <service_name>
 
 Note: The corresponding commands for the former and latter are `disable` and `stop`, respectively.
 
-## xargs
+# xargs
 
 It is possible to pass `argument` as argument to command `command` using `xargs`:
 
@@ -177,19 +175,19 @@ COMMAND         CLS PRI %CPU PSR
 ksoftirqd/3      TS  19  0.0   3
 ```
 
-## Error codes
+# Error codes
 
 Linux error codes can be found in `errno-base.h` and `errno.h` located in `/usr/include/asm-generic/` folder.
 
-## Jobs
+# Jobs
 
 To see all jobs, type `jobs`. To put a job to foreground, use `fg <job_num>`. Similarly, to put a job to background, type `bg <job_num>`. You can put the current process to background with `CTRL + z` combination.
 
-## IPC
+# IPC
 
 You can see processes using the IPC (Inter-Process Communication) with the `ipcs` command.
 
-## watch
+# watch
 
 You can run a command periodically and highlight differences using:
 
@@ -197,9 +195,9 @@ You can run a command periodically and highlight differences using:
 watch -n <sec> -d <command>
 ```
 
-## xxd
+# xxd
 
-### Standard hexdump
+## Standard hexdump
 
 ```shell
 $ xxd <<< hello
@@ -208,14 +206,14 @@ $ xxd <<< hello
 
 Note: You can also specify filename instead: `xxd <filename>`
 
-### Raw hex output
+## Raw hex output
 
 ```shell
 $ xxd -ps <<< hello
 68656c6c6f0a
 ```
 
-### Hexdump to ASCII
+## Hexdump to ASCII
 
 ```shell
 $ xxd <<< hello | xxd -r
@@ -224,7 +222,7 @@ hello
 
 Note: This is, sort of, equivalent to `echo hello | xxd | xxd -r`.
 
-## column
+# column
 
 You can arrange text in columns very easy with the `column` tool. Try this for example:
 
@@ -232,7 +230,7 @@ You can arrange text in columns very easy with the `column` tool. Try this for e
 column -t -s':' /etc/passwd
 ```
 
-## du
+# du
 
 To get the size of a folder, use:
 
@@ -240,7 +238,7 @@ To get the size of a folder, use:
 du -sh <folder>
 ```
 
-## echo
+# echo
 
 |  switch   |           meaning           |
 |-----------|-----------------------------|
@@ -255,9 +253,9 @@ Sometimes you will have to do an echo as a superuser. It is best accomplished by
 sudo sh -c 'echo "<text>" > <filename>'
 ```
 
-## ls
+# ls
 
-### Sort by date
+## Sort by date
 
 To sort by last modified date in ascending order:
 
@@ -265,7 +263,7 @@ To sort by last modified date in ascending order:
 ls -tr
 ```
 
-### Get inode number
+## Get inode number
 
 To get inode number of a file:
 
@@ -273,7 +271,7 @@ To get inode number of a file:
 ls -i <file_name> | sed -n 's/^\([0-9]\+\)\s.*$/\1/p'
 ```
 
-## grep
+# grep
 
 |  switch   |       meaning       |
 |-----------|---------------------|
@@ -299,7 +297,7 @@ To find lines ending with `STR`, use:
 grep 'STR$' <filename>
 ```
 
-### grep AND
+## grep AND
 
 Without resorting to regex, just pipe grep into another:
 
@@ -307,7 +305,7 @@ Without resorting to regex, just pipe grep into another:
 grep 'STR1' | grep 'STR2'
 ```
 
-### grep OR
+## grep OR
 
 You can use:
 
@@ -315,7 +313,7 @@ You can use:
 grep 'STR1\|STR2'
 ```
 
-## awk
+# awk
 
 General syntax would be:
 
@@ -323,7 +321,7 @@ General syntax would be:
 awk 'BEGIN { <code_on_begin> }; { <code_per_line> }; END { <code_on_end> }' <filename>
 ```
 
-### Variables
+## Variables
 
 | variable |      meaning     |
 |----------|------------------|
@@ -339,7 +337,7 @@ TEST_VAR=Hello
 echo "world" | awk -v test=$TEST_VAR '{ print test " " $0 }'
 ```
 
-### Functions
+## Functions
 
 You can define a function alongside the three main blocks:
 
@@ -347,7 +345,7 @@ You can define a function alongside the three main blocks:
 awk 'BEGIN { ... }; function test(var){ ... }; { ... }; END { ... };' <filename>
 ```
 
-### Regex
+## Regex
 
 You can test if a variable conforms to a regex by using:
 
@@ -355,7 +353,7 @@ You can test if a variable conforms to a regex by using:
 if(var ~ /<regex>/) { ... }
 ```
 
-### Whitespace
+## Whitespace
 
 You can use awk to trim leading and trailing whitespace:
 
@@ -364,7 +362,7 @@ $ echo "  test " | awk '{$1=$1;print}'
 test
 ```
 
-### Numeric operations
+## Numeric operations
 
 Standard arithmetic is supported in awk. One of the differences from `C` is the bitshift operation:
 
@@ -373,7 +371,7 @@ $ echo 3 | awk '{ print lshift(1,$1) }'
 8
 ```
 
-### Example 1
+## Example 1
 
 Print entries in `/etc/passwd` with line numbers and total line count:
 
@@ -381,7 +379,7 @@ Print entries in `/etc/passwd` with line numbers and total line count:
 $ awk 'BEGIN { FS=":"; lines=0 }; { print NR,$1; lines++ }; END { print "Total number of entries: " lines; }' /etc/passwd
 ```
 
-### Example 2
+## Example 2
 
 List non-hidden folders with users (formatted as `<user> <- <folder>`):
 
@@ -389,7 +387,7 @@ List non-hidden folders with users (formatted as `<user> <- <folder>`):
 $ ls -lahp | gawk 'BEGIN { OFS=" <- " }; { if($9 ~ /\/$/ && $9 !~ /^\./){ gsub("/$","",$9); print $3,$9 } }'
 ```
 
-## syslog
+# syslog
 
 ```shell
 logger <message>
@@ -401,7 +399,7 @@ To output syslog while waiting for new messages:
 tail -f /var/log/syslog
 ```
 
-## dmesg
+# dmesg
 
 To make `dmesg` wait and output new messages:
 
@@ -409,7 +407,7 @@ To make `dmesg` wait and output new messages:
 dmesg -w
 ```
 
-## seq
+# seq
 
 To get a sequence of numbers from `a` to `b` with step `k`:
 
@@ -426,7 +424,7 @@ $ seq 5 3 12
 11
 ```
 
-## sed
+# sed
 
 The lines passing through `sed` will be output by default. Try:
 
@@ -446,7 +444,7 @@ $ seq 1 2 7 | sed -n ''
 
 In this case there is no output.
 
-### Printing lines
+## Printing lines
 
 To print the third line from the last example, type:
 
@@ -466,7 +464,7 @@ $ seq 1 1 17 | sed -n '5~3p'
 17
 ```
 
-### Removing lines
+## Removing lines
 
 To remove a line, use the `d` command, e.g. remove the third line from the first five natural numbers:
 
@@ -507,7 +505,7 @@ $ seq 1 1 5 | sed '$!d'
 5
 ```
 
-### Replacing strings
+## Replacing strings
 
 To replace `STR1` with `STR2`, do:
 
@@ -530,7 +528,7 @@ $ echo "Hello world!" | sed 's/Hello/Bye/g'
 Bye world!
 ```
 
-### Prepend and append
+## Prepend and append
 
 To add `<char>` at the beginning of each line, type:
 
@@ -560,7 +558,7 @@ $ seq 1 2 20 | sed '1~3s/$/#/' | sed '1~2s/^/#/' | sed '5s/#/-/'
 19#
 ```
 
-### Number of lines
+## Number of lines
 
 To get the number of lines, you can, for example, do:
 
@@ -569,7 +567,7 @@ $ seq 1 1 5 | sed -n '$='
 5
 ```
 
-### Regex
+## Regex
 
 It is possible to do regex with `sed`. Try:
 
@@ -584,7 +582,7 @@ $ seq 1 1 5 | sed 's/[23]/-&/'
 
 The `&` represents the matched string.
 
-### Newlines
+## Newlines
 
 Assume we have a shell with a lot of commands like:
 
@@ -607,7 +605,7 @@ sed -E ':begin;$!N;s/echo -ne "\(\!\) (.*)\\n"\nexit ([0-9]+)/error_and_exit "\1
 
 The `N` in the command will read another line of input and append it to the current line separated by newline (i.e. `\n`). This, however, means that the `sed` will only process every second line. To make it process each line, we add `P` (print) and `D` (delete) at the end. The `-E` switch is for extended regex.
 
-### Example
+## Example
 
 Assume we have a list of songs:
 
@@ -624,7 +622,7 @@ sed -n 's/^\([0-9]\+\)\s*\?-\s*\?\(\w\+\)\.\(\w\+\)$/track: \1, name: \2, format
 
 Note: In regular `sed`, it is not possible to do grouping without capturing (as is possible with some other regex conventions by using `(?:<pattern>)` syntax.
 
-### Range
+## Range
 
 To input a range, use, for example, `2,$` as prefix. This will input a range from second line to the last one.
 
@@ -644,7 +642,7 @@ $ seq 1 5 | sed -n '1,3p'
 3
 ```
 
-#### Number of lines
+### Number of lines
 
 To get number of lines matching `STR1` in Vim, do:
 
@@ -654,9 +652,9 @@ To get number of lines matching `STR1` in Vim, do:
 
 Also, if you want all matches (not just number of lines), use `gn` instead of `n` at the end.
 
-## find
+# find
 
-### Find executable
+## Find executable
 
 This will find all executable files (excluding searchable folders with `-type f` switch) in the specified folder:
 
@@ -664,7 +662,7 @@ This will find all executable files (excluding searchable folders with `-type f`
 find <folder> [OPTIONS] -executable -type f
 ```
 
-### Quit on first match
+## Quit on first match
 
 To stop find on first match (and print it):
 
@@ -672,7 +670,7 @@ To stop find on first match (and print it):
 find <folder> [OPTIONS] -print -quit
 ```
 
-### Execute on match
+## Execute on match
 
 To execute command `<comm>` for each match, use:
 
@@ -688,7 +686,7 @@ find . -type f -executable -name "*.sh" -exec cat {} \;
 
 Note: This is not really optimal as it creates subprocess for each match.
 
-### Find links
+## Find links
 
 To find links pointing to a specific file:
 
@@ -702,13 +700,13 @@ To find links pointing to any file with specified filename:
 find / -lname <filename>
 ```
 
-## Shell Parameter Expansion
+# Shell Parameter Expansion
 
 You can find out more about shell parameter expansion [here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html).
 
-## Audio
+# Audio
 
-### PulseAudio
+## PulseAudio
 
 You can check if PulseAudio is up and running with:
 
@@ -718,11 +716,11 @@ $ echo $?
 0
 ```
 
-#### Settings
+### Settings
 
 PulseAudio settings are located in file `/etc/pulse/default.pa`.
 
-#### Restart
+### Restart
 
 To restart the daemon, you can just kill it and it will start again automatically:
 
@@ -742,7 +740,7 @@ Note: Sometimes it may also be necessary to start the PulseAudio daemon manually
 pulseaudio -D
 ```
 
-#### Fix crackling audio
+### Fix crackling audio
 
 If crackling or clicking is present when playing audio, usually it is resolved with either adding `tsched=0` or removing it from the following line in PulseAudio settings:
 
@@ -758,7 +756,7 @@ Note: You can check if `tsched` is enabled with:
 pacmd list | grep tsched
 ```
 
-#### PulseAudio and JACK
+### PulseAudio and JACK
 
 You can use PulseAudio as a client to JACK server. First run:
 
@@ -787,7 +785,7 @@ pacmd set-default-sink jack_out
 
 Note: This line can be put into "Execute script after Startup" in "Options" tab in `qjackctl` setup.
 
-#### Sink operations
+### Sink operations
 
 You can perform operations on sinks, such as set volume, mute, etc. To get a list of sinks, use:
 
@@ -807,11 +805,11 @@ Then, to, for example, set volume for a specific sink, run:
 pacmd set-sink-volume <sink_index> <sink_volume>
 ```
 
-#### PulseAudio GUI control
+### PulseAudio GUI control
 
 If necessary, you can use `pavucontrol` to control PulseAudio.
 
-### JACK
+## JACK
 
 To start `jackd` use:
 
@@ -830,7 +828,7 @@ Note: For ALSA, use:
 ```shell
 jackd -d alsa
 ```
-#### Real-time privileges
+### Real-time privileges
 
 First make sure that your user is part of `audio` group:
 
@@ -847,7 +845,7 @@ Then, add the following lines to `/etc/security/limits.d/audio.conf` (create it 
 @audio	-	memlock	unlimited
 ```
 
-#### Connections
+### Connections
 
 To see a list of JACK clients:
 
@@ -863,7 +861,7 @@ jack_connect <client_1> <client_2>
 
 Note: To disconnect, just use `jack_disconnect` in the same manner as above.
 
-#### JACK over network
+### JACK over network
 
 On master (where audio will be output to speakers), after running JACK, also run:
 
@@ -887,7 +885,7 @@ jackd -d net -h
 
 Note: This step for slave may not be necessary; usually it is enough to set up `net` as driver in `qjackctl` and start the JACK server.
 
-#### Autostart JACK
+### Autostart JACK
 
 JACK can be autostarted via systemd service. Note that this is not the preferred way of doing, as JACK was not designed as a system-wide replacement for PulseAudio, and requires XServer. However, a few hacks can enable JACK to be started without XServer via systemd; just copy the following contents to `/etc/systemd/system/jackd.service`:
 
@@ -909,7 +907,7 @@ WantedBy=multi-user.target
 
 Then, simply enable the service with `systemctl enable jackd.service`.
 
-### OpenAL
+## OpenAL
 
 OpenAL can be configured by editing the following file:
 
@@ -923,9 +921,9 @@ Note: If there are issues with `alsoft` JACK client, you can always force OpenAL
 driver = pulse
 ```
 
-## Networking
+# Networking
 
-### GUI via SSH
+## GUI via SSH
 
 You can run GUI applications on host with:
 
@@ -947,11 +945,11 @@ Note: You can also forward mouse and keyboard by installing `x2x` on host and th
 ssh -X <username>@<address> 'x2x -east -to :0'
 ```
 
-### ip
+## ip
 
 The source code for various ip utils like `ip link` and `ip netns` can be found [here](https://github.com/shemminger/iproute2/tree/master/ip). A good tutorial for various virtual network models (via `ip link`) is located [here](https://developers.redhat.com/blog/2018/10/22/introduction-to-linux-interfaces-for-virtual-networking/#bridge).
 
-#### List links
+### List links
 
 You can get the list of all links (across all namespaces) by using:
 
@@ -961,7 +959,7 @@ ip link list
 
 This is similar to `ifconfig -a`.
 
-#### List network namespaces
+### List network namespaces
 
 To list all network namespaces:
 
@@ -971,7 +969,7 @@ ip netns list
 
 The command `ip netns show` is the same.
 
-#### Add netns
+### Add netns
 
 You can add a network namespace via:
 
@@ -979,7 +977,7 @@ You can add a network namespace via:
 ip netns add <netns_name>
 ```
 
-#### Execute within netns
+### Execute within netns
 
 You can run any shell command within the specified network namespace by using:
 
@@ -995,7 +993,7 @@ ip netns exec <netns_name> ip link list
 
 This will give you a list of links within the specified network namespace.
 
-#### Move link to a namespace
+### Move link to a namespace
 
 To move a link to a specific namespace, use:
 
@@ -1003,7 +1001,7 @@ To move a link to a specific namespace, use:
 ip netns exec <old_netns> ip link set <link_name> netns <new_netns>
 ```
 
-### Scan network for devices
+## Scan network for devices
 
 First, find the IP range for the desired interface (e.g. `eth0`):
 
@@ -1029,7 +1027,7 @@ The only thing to note here is that you have to convert the subnet mask to CIDR,
 echo <subnet_mask> | python3 -c 'import sys; print(len([x for x in "".join(list(map(lambda o: bin(int(o,10))[2:].zfill(8), sys.stdin.read().split(".")))) if x == "1"]))' | xargs -I {} echo "/{}"
 ```
 
-### NFS
+## NFS
 
 When sharing files between Linux machines, it is best to use NFS. To set up a shared folder on the server, first be sure to install `nfs-kernel-server` and `nfs-common` (Ubuntu/Debian) or `nfs-utils` (Arch).
 
@@ -1069,9 +1067,9 @@ Finally, on the client-side (after installing `nfs-common`):
 mount -t nfs <ip_addr>:/path/to/shared/fs /path/to/mount
 ```
 
-## ldconfig
+# ldconfig
 
-### List
+## List
 
 To see a list of installed libraries use:
 
@@ -1079,7 +1077,7 @@ To see a list of installed libraries use:
 ldconfig -p | grep <lib_name>
 ```
 
-### Update
+## Update
 
 To update after installing or removing libraries, just run:
 
@@ -1089,7 +1087,7 @@ ldconfig
 
 Note: You may need to run this as root.
 
-## Devices
+# Devices
 
 To get a list of all devices, use:
 
@@ -1099,7 +1097,7 @@ lshw
 
 The link to source code is [here](https://github.com/lyonel/lshw), along with list of search paths.
 
-### Block devices
+## Block devices
 
 List block devices:
 
@@ -1109,7 +1107,7 @@ lsblk
 
 Basically the information is derived from `/sys/block/` folder (and its subfolders).
 
-#### Filesystem info
+### Filesystem info
 
 To get information on filesystems per partition, use:
 
@@ -1119,7 +1117,7 @@ file -sL /dev/sd*
 
 Note: You can also use `blkid`.
 
-#### Format disk
+### Format disk
 
 To format disk, use:
 
@@ -1127,7 +1125,7 @@ To format disk, use:
 dd if=/dev/zero/ of=/dev/sd<?> conv=fdatasync status=progress
 ```
 
-#### Install ISO
+### Install ISO
 
 To install ISO image on a disk:
 
@@ -1137,7 +1135,7 @@ dd bs=4M if=<path_to_ISO> of=/dev/sd<?> conv=fdatasync status=progress
 
 Note: The `bs` option specifies size of one write, while `conv`, as set to `fdatasync` will ensure that all data is flushed to disk when `dd` is finished writing.
 
-### PCI devices
+## PCI devices
 
 List PCI devices:
 
@@ -1153,7 +1151,7 @@ The information is obtained by parsing:
 
 This is not human-readable, however. Usually there is a file called `pci.ids` on the system, possibly somewhere in `/usr/share/` folder.
 
-### USB devices
+## USB devices
 
 List USB devices (use `-v` switch for more information on each device):
 
@@ -1179,7 +1177,7 @@ To find which specific kernel module is responsible:
 /sbin/modinfo /sys/bus/usb/devices/<device>/modalias
 ```
 
-### Network devices
+## Network devices
 
 To find the driver of a physical network device (e.g. `eth0`), use:
 
@@ -1189,11 +1187,11 @@ readlink /sys/class/net/<device>/device/driver
 
 Note: For a virtual network device (e.g. `lo`), there is no link pointing to the driver, but, you can find information about it in `/sys/devices/virtual/net/<device>` folder.
 
-### Displays
+## Displays
 
 It's best to get info on displays using `xrandr`.
 
-#### Primary display size
+### Primary display size
 
 Here is a one-liner using `xrandr` to get display size (diagonal) in inches:
 
@@ -1201,9 +1199,9 @@ Here is a one-liner using `xrandr` to get display size (diagonal) in inches:
 xrandr | grep primary | sed -n 's/^.*\s\([0-9]\+\)mm\sx\s\([0-9]\+\)mm$/\1x\2/p' | python3 -c 'import sys; dim = tuple(map(lambda s: (int(s, 10) / 25.4 )**2, sys.stdin.read()[:-1].split("x"))); print((dim[0] + dim[1])**0.5)'
 ```
 
-## Filesystem
+# Filesystem
 
-### Create a file
+## Create a file
 
 A bit advanced tool to create a file is:
 
@@ -1219,7 +1217,7 @@ For `<mode>` you can choose:
 | `c`, `u` | character (unbuffered) special file |
 |   `p`    | FIFO                                |
 
-### Temporary files
+## Temporary files
 
 To create a temporary file with a unique name:
 
@@ -1237,7 +1235,7 @@ test.jEQ
 
 Note: The duration of the file is system and location dependant.
 
-#### `tmpfs` and `ramfs`
+### `tmpfs` and `ramfs`
 
 To create a temporary filesystem (all files created there reside only in RAM), use, e.g.:
 
@@ -1252,11 +1250,11 @@ Note: You can view all mounted filesystems (in pretty-print) by using `df -h`.
 Note: Similarly, you can use `ramfs`; the only difference is the `ramfs` will grow dynamically as space is used, and the system might crash when all RAM is consumed. On the other hand, `tmpfs` will not grow dynamically (it is fixed on the specified size), and might use swap space if out of RAM.
 
 
-## Terminal multiplexing
+# Terminal multiplexing
 
-### GNU Screen
+## GNU Screen
 
-#### Shortcuts
+### Shortcuts
 
 |        action       |    shortcut   |
 |---------------------|---------------|
@@ -1281,7 +1279,7 @@ Note: Next and previous window will change windows inside current screen. Also, 
 
 Note: In copy mode, navigate as in Vim. To copy text, trigger select with space or return key.
 
-#### Create session
+### Create session
 
 You can create session by simply calling `screen`. You can create a named screen session by using:
 
@@ -1289,7 +1287,7 @@ You can create session by simply calling `screen`. You can create a named screen
 screen -S <name>
 ```
 
-#### List sessions
+### List sessions
 
 To list current screen sessions:
 
@@ -1297,7 +1295,7 @@ To list current screen sessions:
 screen -list
 ```
 
-#### Reattach to a session
+### Reattach to a session
 
 To reattach to a session, try:
 
@@ -1307,7 +1305,7 @@ screen -r <pid>
 
 Note: You don't have to specify PID, using only `screen -r` will attach you to the last used screen session.
 
-### `tmux`
+## `tmux`
 
 |        action       |    shortcut   |
 |---------------------|---------------|
@@ -1316,9 +1314,9 @@ Note: You don't have to specify PID, using only `screen -r` will attach you to t
 | Split window (ver.) |  `TCRL & %`   |
 | Window full screen  |  `TCRL & z`   |
 
-## Vim
+# Vim
 
-### Generic shortcuts
+## Generic shortcuts
 
 |        action       |    shortcut   |
 |---------------------|---------------|
@@ -1362,7 +1360,7 @@ Note: You don't have to specify PID, using only `screen -r` will attach you to t
 
 Note: The `&` means here "followed by" and not "at the same time" (which is `+`).
 
-### Commands
+## Commands
 
 |      command      |              action            |
 |-------------------|--------------------------------|
@@ -1375,7 +1373,7 @@ Note: The `&` means here "followed by" and not "at the same time" (which is `+`)
 |  `:colorscheme`   | set colorscheme                |
 | `:Explore <path>` | explore in `netrw`             |
 
-### Buffers
+## Buffers
 
 |      command      |     action         |
 |-------------------|--------------------|
@@ -1387,7 +1385,7 @@ Note: The `&` means here "followed by" and not "at the same time" (which is `+`)
 
 Note: You can delete all buffers and edit the last with `:%bd|e#`.
 
-### Edit via SSH
+## Edit via SSH
 
 You can edit files via SSH with:
 
@@ -1401,7 +1399,7 @@ Similarly, you can use the same as in-editor command:
 :e scp://<user>@<host>/path/to/file
 ```
 
-### Input ranges
+## Input ranges
 
 |  symbol  |              meaning             |
 |----------|----------------------------------|
@@ -1410,7 +1408,7 @@ Similarly, you can use the same as in-editor command:
 | `<num>`  |  input line `<num>`              |
 |`:<a>,<b>`|  input range from `<a>` to `<b>` |
 
-### Search
+## Search
 
 See:
 
@@ -1432,7 +1430,7 @@ This is useful for finding unwanted whitespace, e.g. with:
 /\s\+$
 ```
 
-### Shell
+## Shell
 
 To pipe input to a shell command, you can use the selection or visual block, and write something like this:
 
@@ -1458,7 +1456,7 @@ Similarly, for `xclip`:
 :r !xclip -o -selection clipboard
 ```
 
-### `ctags`
+## `ctags`
 
 |        action       |    shortcut   |
 |---------------------|---------------|
@@ -1473,7 +1471,7 @@ Note: You can also use the following commands:
 | Next definition     |    `:tn`      |
 | Previous definition |    `:tp`      |
 
-#### Generate tags file
+### Generate tags file
 
 To generate tags file for a folder (and its subfolders), use:
 
@@ -1486,6 +1484,49 @@ Similarly, you can generate tags for the Linux kernel source with:
 ```shell
 make tags
 ```
+
+# Graphics
+
+## dot
+
+Example of a graph in `dot`:
+
+```dot
+digraph {
+	subgraph cluster_cpu {
+		label="CPU casing";
+		rankdir=LR;
+		cpu [ label=CPU, shape=rectangle ];
+		mmu [ label=MMU, shape=rectangle ];
+		tlb [ label=TLB, shape=rectangle ];
+		cpu -> mmu [ dir=backward; label="VA" ];
+		{ rank=same; mmu -> tlb; tlb -> mmu }
+	}
+}
+```
+
+You can export the graph to `.eps` by using:
+
+```shell
+dot -Teps <in_fname> -o <out_fname>
+```
+
+Similarly, to export to `.pdf`:
+
+```shell
+dot -Tpdf <in_fname> -o <out_fname>
+```
+
+## gnuplot
+
+You can plot data easily with `gnuplot`:
+
+```shell
+seq 1 1 50 | awk '{ print $0 OFS $0 ** 2 }' > test.csv
+gnuplot -e "set term pdf; plot 'test.scv'" > test.pdf
+```
+
+Similarly, you can use `set term eps` to export the file to `.eps` format.
 
 # Git
 
@@ -1818,4 +1859,6 @@ md.b <address> <number_of_objects>
 Note: All arguments are in hexadecimal.
 
 Note: You can also use `md.w`, `md.l` and `md.q` to read 2, 4 and 8 bytes, respectively.
+
+
 

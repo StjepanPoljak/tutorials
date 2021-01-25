@@ -577,12 +577,14 @@ The first two bits (0-1) define the descriptor type:
 
 | value |        type       |  levels  |
 |-------|-------------------|----------|
-| `bx0` |       fault       |   all    |
+| `bX0` |       fault       |   all    |
 | `b11` |    table entry    |   1, 2   |
 | `b11` | table descriptor  |  0, 1, 2 |
 | `b01` |    block entry    |   1, 2   |
 
-Note: The difference between table entry and table descriptor is in the fact that table descriptor only points to the next level table.
+Note: `X` here denotes any bit.
+
+Note: The difference between table entry and table descriptor is in the fact that table descriptor only points to the next level table. To set address of next entry, or of physical address, simply `or` page table descriptor with the address.
 
 The other fields are described with:
 
