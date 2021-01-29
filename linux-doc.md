@@ -923,6 +923,14 @@ driver = pulse
 
 # Networking
 
+## dnsmasq
+
+You can set DNS cache by typing:
+
+```shell
+dnsmasq -c <num_of_entries>
+```
+
 ## GUI via SSH
 
 You can run GUI applications on host with:
@@ -944,6 +952,16 @@ Note: You can also forward mouse and keyboard by installing `x2x` on host and th
 ```shell
 ssh -X <username>@<address> 'x2x -east -to :0'
 ```
+
+## Hosts
+
+You can edit hosts in `/etc/hosts/` file. To block a certain site, simply add:
+
+```
+0.0.0.0 <site_name>
+```
+
+This is useful for ad blocking, and there is a nice compilation of ad and malware sites [here](https://github.com/StevenBlack/hosts).
 
 ## ip
 
@@ -1086,6 +1104,14 @@ ldconfig
 ```
 
 Note: You may need to run this as root.
+
+# mogrify
+
+You can convert `.jpg` files easily to `.png` with:
+
+```shell
+mogrify -format png <path-to-jpg>
+```
 
 # Devices
 
@@ -1485,7 +1511,7 @@ Similarly, you can generate tags for the Linux kernel source with:
 make tags
 ```
 
-# Graphics
+# Graphs and plots
 
 ## dot
 
@@ -1527,6 +1553,28 @@ gnuplot -e "set term pdf; plot 'test.scv'" > test.pdf
 ```
 
 Similarly, you can use `set term eps` to export the file to `.eps` format.
+
+# Administration
+
+## Add user to group
+
+To add user to group:
+
+```shell
+usermod -aG <group> <user>
+```
+
+## `sudo`
+
+If you encounter any problems adding a user to the `sudo` group, you should examine `/etc/sudoers` file.
+
+## Remove user from group
+
+To remove user from group use:
+
+```shell
+gpasswd -d <user> <group>
+```
 
 # Git
 
