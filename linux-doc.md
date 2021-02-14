@@ -1766,6 +1766,10 @@ Use `efivar -n <efivar_name> -p` to see EFI variable contents and attributes.
 
 Go to EFI variable folder. First check with `lsattr` if the EFI variable has `i` (immutable) attribute. If that is so, use `chattr -i <efivar_name>` and then remove it with `rm -rf <efivar_name>`.
 
+## Development
+
+Best source for development under UEFI is located in [UEFI specification](https://uefi.org/sites/default/files/resources/UEFI%20Spec%202_6.pdf).
+
 # U-Boot
 
 ## Example compile for RPi 3B+
