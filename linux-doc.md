@@ -1730,6 +1730,42 @@ To find line in source code corresponding to an address:
 (gdb) info line *<address>
 ```
 
+# UEFI
+
+## List boot entries
+
+Simply use `efibootmgr` to list boot entries.
+
+## Remove boot entry
+
+To remove boot entry, e.g. `Boot0003`, type `efibootmgr -b 3 -B`.
+
+## Create boot entry
+
+To create a boot entry, e.g. `Boot0003`, use:
+
+```shell
+efibootmgr -c -p <partition> -d <disk> -l '\bzImage' -u '<cmdline_args>' -L <name>
+```
+
+Note: Here `<disk>` defaults to `/dev/sda` if not specified. Also, `<partition>` defaults to `1`.
+
+## Change boot entry
+
+It's impossible to just change boot entry. First you must delete the existing and then create new one instead.
+
+## List EFI variables
+
+Type `efivar -l` to see the list of EFI variables.
+
+## Read EFI variable
+
+Use `efivar -n <efivar_name> -p` to see EFI variable contents and attributes.
+
+## Remove EFI variable
+
+Go to EFI variable folder. First check with `lsattr` if the EFI variable has `i` (immutable) attribute. If that is so, use `chattr -i <efivar_name>` and then remove it with `rm -rf <efivar_name>`.
+
 # U-Boot
 
 ## Example compile for RPi 3B+
