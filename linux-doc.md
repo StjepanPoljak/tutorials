@@ -931,7 +931,25 @@ You can set DNS cache by typing:
 dnsmasq -c <num_of_entries>
 ```
 
-## GUI via SSH
+## SSH
+
+### Check if entry is in known hosts
+
+The following command will return `0` if "host" is in known hosts:
+
+```shell
+ssh-keygen -F "host"
+```
+
+### Remove entry from known hosts
+
+To remove entry "host" use:
+
+```shell
+ssh-keygen -R "host"
+```
+
+### GUI via SSH
 
 You can run GUI applications on host with:
 
