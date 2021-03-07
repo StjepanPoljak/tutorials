@@ -1788,6 +1788,50 @@ Go to EFI variable folder. First check with `lsattr` if the EFI variable has `i`
 
 Best source for development under UEFI is located in [UEFI specification](https://uefi.org/sites/default/files/resources/UEFI%20Spec%202_6.pdf).
 
+# QEMU
+
+## Run QEMU image
+
+To run QEMU image use, e.g.:
+
+```shell
+qemu-system-x86_64 -hdb <path/to/img> -m <mem>
+```
+
+Note: You should always assign some memory to QEMU or you will be facing strange errors and crashes. I always prefer to use `-m 1024` as this seems to be sufficient for both installation and live systems.
+
+## Run live ISO installation
+
+You can use QEMU to run live installation ISO and install it to device of choice:
+
+```shell
+qemu-system-x86_64 -hdb <img/or/dev> -boot d -cdrom <path/to/iso> -m <mem>
+```
+
+Note: For `hdb` you can use `/dev/sd*` or `.img` file created by `qemu-img` as described below. The `-boot d` switch indicates that boot device is `cdrom`.
+
+### Install to image
+
+You can use image file as hard disk in QEMU and, for example, install the system there. To do this, use:
+
+```shell
+qemu-img create <image_name> <size>
+```
+
+For size, you can use, e.g. `3G` (3 gigabytes).
+
+### Resize QEMU image
+
+If you ever need to expand the size of the image you can use:
+
+```shell
+qemu-img resize <image> <size>
+```
+
+Note: To resize for one gigabyte use `+1G` for size.
+
+After this you will need to load the image in QEMU and run e.g. `parted` to resize the partition. After that, run `resize2fs <path/to/dev>`.
+
 # U-Boot
 
 ## Example compile for RPi 3B+
