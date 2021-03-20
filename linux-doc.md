@@ -933,6 +933,14 @@ dnsmasq -c <num_of_entries>
 
 ## SSH
 
+### Add public key to server
+
+To make authorization via SSH keys possible, first generate SSH keys if necessary (use `ssh-keygen`). Then, simply enter:
+
+```shell
+ssh-copy-id -i <path/to/rsa.pub> <user>@<host>
+```
+
 ### Check if entry is in known hosts
 
 The following command will return `0` if "host" is in known hosts:
