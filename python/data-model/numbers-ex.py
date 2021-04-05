@@ -53,11 +53,22 @@ for test in test_list:
         my = ModularInt(*y)
         mz = mx + my if op == "+" else mx * my if op == "*" else None
         print("%s %s %s = %s" % (str(mx), op, str(my), str(mz)))
+        #print("{} {} {} = {}".format(mx, op, my, mz))
 
     except:
         print(str(mx) + " and " + str(my) + " belong to different groups!")
 
         continue
+
+# if __iadd__ (in-place addition) and __imul__ (in-place multiplacation)
+# are not implemented, then a += b and a *= b will assign new objects
+# to a, as demonstrated in the example below
+
+ma = ModularInt(1, 5)
+mb = ModularInt(4, 5)
+print("id(ma) = {}".format(id(ma)))
+ma += mb
+print("id(ma) = {} (after ma += mb)".format(id(ma)))
 
 print(
         "\n"
@@ -66,3 +77,5 @@ print(
         "datamodel.html#emulating-numeric-types"
         "\n"
         )
+
+

@@ -50,3 +50,29 @@ elif tests[1]:
 else:
     print("What is in between truth and lie?")
 # What is in between truth and lie?
+
+from collections import *
+
+# named tuples take exactly the same amount
+# of memory as tuples and less than a regular
+# object
+
+Horse = namedtuple("Horse", ["name", "speed", "age", "sex"])
+
+horse = Horse("Secretariat", 200, 34, "m")
+
+print(horse._fields)
+# ('name', 'speed', 'age', 'sex')
+
+print(horse._asdict())
+# {'name': 'Secretariat', 'speed': 200, 'age': 34, 'sex': 'm'}
+
+print("{} is a {} year old {} horse who "
+      "achieves speed of {}mph.".format(horse.name, horse.age,
+      "male" if horse.sex == "m" else "female", horse.speed))
+# Secretariat is a 34 year old male horse who achieves speed of 200mph.
+
+# Note: You can create a Horse instance from an iterable
+# by using either Horse._make(iterable) or Horse(*iterable).
+
+# Note: Putting mutable items in a tuple is not a good pattern.

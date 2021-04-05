@@ -19,6 +19,12 @@ fruit = ["banana", "pineapple", "apple", "cherry"]
 print(fruit)
 # ['banana', 'pineapple', 'apple', 'cherry']
 
+print(fruit == ["banana", "pineapple", "apple", "cherry"])
+# True
+
+print(fruit == ["banana", "pineapple", "cherry", "apple"])
+# False
+
 print(fruit[0] + " and " + fruit[2])
 # banana and apple
 
@@ -52,6 +58,11 @@ vegetables.reverse()
 print(vegetables)
 # ['cucumber', 'tomato', 'spinach']
 
+# The following example shows the standard Python
+# pattern where object.method() usually modifies
+# the object in place while function(object) returns
+# a new object.
+
 print(sorted(vegetables))
 # ['cucumber', 'spinach', 'tomato']
 
@@ -62,7 +73,7 @@ vegetables.sort()
 print(vegetables)
 # ['cucumber', 'spinach', 'tomato']
 
-vegetables.expand(['broccoli', 'cabbage'])
+vegetables.extend(['broccoli', 'cabbage'])
 # ['cucumber, 'spinach', 'tomato', 'broccoli', 'cabbage']
 
 animals = ['dog', 'cat', 'mouse']
@@ -70,6 +81,9 @@ animals = ['dog', 'cat', 'mouse']
 animals.sort(reverse=True)
 print(animals)
 # ['mouse', 'dog', 'cat']
+
+print(sorted(animals, key=len))
+# ['dog', 'cat', 'mouse']
 
 print(len(animals))
 # 3
@@ -187,3 +201,35 @@ print(z)
 # [1, 2, 3, 4, 5]
 # [1, 2, 3, 4]
 
+# <-- bisect and insort -->
+
+import bisect
+
+# bisect.bisect(haystack, needle) returns the place in a
+# haystack (sorted array) where needle (a new element)
+# should be placed so it remains sorted (basically, does
+# a binary search)
+
+some_names.sort()
+print(some_names)
+# ['Jacob', 'James', 'Jerry', 'John', 'John', 'Joseph']
+
+print(bisect.bisect(some_names, "Jamie"))
+# 2
+
+# Note: bisect() is an alias for bisect_right()
+
+print(bisect.bisect_right(some_names, "James"))
+# 2
+
+print(bisect.bisect_left(some_names, "James"))
+# 1
+
+# Note: You can narrow the search by providing lo and hi
+# optional arguments (defaults: lo=0, hi=len(haystack))
+
+# insort does insertion sort
+
+bisect.insort(some_names, "Jamie")
+print(some_names)
+# ['Jacob', 'James', 'Jamie', 'Jerry', 'John', 'John', 'Joseph']

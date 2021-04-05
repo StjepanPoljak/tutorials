@@ -59,4 +59,5 @@ for num in (x for x in range(0, n) if x % m == 0):
 
 # Note: Unlike list comprehension, generator
 # expressions and generators produce only one
-# item at a time (perfect for lazy evaluation)
+# item at a time (perfect for lazy evaluation
+# and passing them to other constructors)
