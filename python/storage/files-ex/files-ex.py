@@ -1,4 +1,4 @@
-# Python3 File Examples
+#!/usr/bin/env python3
 
 try:
     with open("crew.txt") as crew_file:

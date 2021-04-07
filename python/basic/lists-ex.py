@@ -1,4 +1,4 @@
-# Python3 List Examples
+#!/usr/bin/env python3
 
 empty_list = []
 

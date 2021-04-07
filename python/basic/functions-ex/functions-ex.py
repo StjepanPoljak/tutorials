@@ -1,4 +1,4 @@
-# Python3 Fuction Examples
+#!/usr/bin/env python3
 
 import module_ex
 

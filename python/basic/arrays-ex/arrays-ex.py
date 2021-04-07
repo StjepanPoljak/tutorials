@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from array import array
 
 floats = array('d', (0.3, 0.2, 0.6, 0.4))

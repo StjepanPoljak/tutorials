@@ -1,4 +1,4 @@
-# Python3 String Examples
+#!/usr/bin/env python3
 
 test_string = "heLLo wOrLd"
 

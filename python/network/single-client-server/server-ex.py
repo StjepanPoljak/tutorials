@@ -1,4 +1,4 @@
-# Python3 server example
+#!/usr/bin/env python3
 
 import socket
 import time

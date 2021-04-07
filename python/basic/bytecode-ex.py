@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import dis
 
 print("Disassembly of a + 3:")

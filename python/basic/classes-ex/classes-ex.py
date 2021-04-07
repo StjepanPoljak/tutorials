@@ -1,4 +1,4 @@
-# Python3 Class Examples
+#!/usr/bin/env python3
 
 from captain import Captain
 

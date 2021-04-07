@@ -1,4 +1,4 @@
-# Python3 Generator Examples
+#!/usr/bin/env python3
 
 class Vegetables():
 

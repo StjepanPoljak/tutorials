@@ -1,4 +1,4 @@
-# Python3 Client Example
+#!/usr/bin/env python3
 
 import socket
 

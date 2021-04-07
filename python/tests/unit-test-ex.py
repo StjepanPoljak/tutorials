@@ -1,4 +1,4 @@
-# Python3 Unit Test Examples
+#!/usr/bin/env python3
 
 import unittest
 

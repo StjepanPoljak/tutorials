@@ -1,4 +1,4 @@
-# Python3 Tuple Examples
+#!/usr/bin/env python3
 
 pythagorean = (3, 4, 5)
 
