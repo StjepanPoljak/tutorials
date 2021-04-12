@@ -845,6 +845,8 @@ Then, add the following lines to `/etc/security/limits.d/audio.conf` (create it 
 @audio	-	memlock	unlimited
 ```
 
+Note: If you are on Arch Linux (and similar), you may need to run `pacman -S realtime-privileges`.
+
 ### Connections
 
 To see a list of JACK clients:
