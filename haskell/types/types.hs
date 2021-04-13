@@ -4,6 +4,8 @@ main = do
     putStrLn $ show $ person realPerson
     putStrLn $ show $ age realPerson
 
+    printTree smallTree
+
     where realPerson = RealPerson dev 34 Male
           dev = Person "Stjepan" "Poljak"
 
@@ -60,8 +62,39 @@ instance Show RealPerson where
 -- Recursive types can be used to make list and tree-like   --
 -- types.                                                   --
 
---                   left node                              --
+--                 left subtree                             --
 --                   |------|                               --
-data Tree a = Tree a (Tree a) (Tree a) | None
+data Tree a = Node a (Tree a) (Tree a) | Empty
 --                 |          |------|                      --
---               data        right node                     --
+--               data       right subtree                   --
+            deriving (Show)
+
+leaf :: String -> Tree String
+leaf str = Node str Empty Empty
+
+left :: String -> Tree String -> Tree String
+left str tree = Node str tree Empty
+
+right :: String -> Tree String -> Tree String
+right str tree = Node str Empty tree
+
+smallTree :: Tree String
+smallTree = Node "This" (left "is" (leaf "a")) (left "small" (leaf "tree"))
+
+treeIndent :: String
+treeIndent = "|---"
+
+wrap :: String -> String
+wrap str = "(" ++ str ++ ")"
+
+printTree :: Tree String -> IO ()
+printTree tree = printTreeStep tree "" True
+
+    where printTreeStep :: Tree String -> String -> Bool -> IO ()
+          printTreeStep Empty _ _ = return ()
+          printTreeStep (Node str left right) prefix trig = do
+                putStrLn $ (if trig then ""
+                            else prefix ++ treeIndent) ++ wrap str
+                printTreeStep left ("    " ++ prefix) False
+                printTreeStep right ("    " ++ prefix) False
+                return ()
