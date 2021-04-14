@@ -4,6 +4,15 @@ main = do
     putStrLn $ show $ person realPerson
     putStrLn $ show $ age realPerson
 
+    if Person "Stjepan" "Poljak" == Person "Stjepan" "Poljak"
+    then putStrLn "Those people are equal."
+    else return ()
+
+    if Person "Stjepan" "Poljak" /= Person "Amela" "Poljak"
+    then putStrLn $ "They are not the same person, " ++
+                    "but they belong with each other."
+    else return ()
+
     printTree smallTree
 
     where realPerson = RealPerson dev 34 Male
@@ -21,6 +30,15 @@ data Person = Person Name Surname
 
 instance Show Person where
     show (Person x y) = x ++ " " ++ y
+
+personsEq :: Person -> Person -> Bool
+personsEq (Person n1 s1) (Person n2 s2) = n1 == n2 && s1 == s2
+-- Note: We couldn't do something like:                     --
+-- personsEq (Person n s) (Person n s) = True               --
+-- A name can appear only once in a set of pattern bindings --
+
+instance Eq Person where
+    p1 == p2 = personsEq p1 p2
 
 -- As value and type constructors live in separate          --
 -- namespaces (expressions and declarations, respectively), --
@@ -72,17 +90,18 @@ data Tree a = Node a (Tree a) (Tree a) | Empty
 leaf :: String -> Tree String
 leaf str = Node str Empty Empty
 
-left :: String -> Tree String -> Tree String
-left str tree = Node str tree Empty
+leftN :: String -> Tree String -> Tree String
+leftN str tree = Node str tree Empty
 
-right :: String -> Tree String -> Tree String
-right str tree = Node str Empty tree
+rightN :: String -> Tree String -> Tree String
+rightN str tree = Node str Empty tree
 
 smallTree :: Tree String
-smallTree = Node "This" (left "is" (leaf "a")) (left "small" (leaf "tree"))
+smallTree = Node "This" (leftN "is" (leaf "a"))
+                        (leftN "small" (leaf "tree"))
 
 treeIndent :: String
-treeIndent = "|---"
+treeIndent = "|___"
 
 wrap :: String -> String
 wrap str = "(" ++ str ++ ")"

@@ -1,7 +1,7 @@
 proj=functions
 
 $(proj): $(proj).hs
-	ghc -dynamic $<
+	ghc -dynamic -Wname-shadowing $<
 
 .PHONY=clean
 clean:

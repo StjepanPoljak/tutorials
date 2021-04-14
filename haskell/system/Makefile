@@ -1,4 +1,4 @@
-proj=types
+proj=system
 
 $(proj): $(proj).hs
 	ghc -dynamic -Wname-shadowing $<
