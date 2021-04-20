@@ -54,7 +54,7 @@ main = do printseq
 f :: Fractional n => [n] -> (Int, n)
 -- To do this the correct way, use Maybe (Int, n) instead.      --
 f list = fstep list begin
-    
+
     where fstep :: Fractional n => [n] -> (Int, n) -> (Int, n)
           fstep [] res = res
           fstep (x:xs) (cnt, sum') = fstep xs (cnt + 1, sum' + x)
@@ -64,11 +64,40 @@ f list = fstep list begin
 
 -- If we used name sum instead of sum', we would shadow the sum --
 -- function from Prelude and get the shadowing warning.         --
+
 g :: Fractional n => (Int, n) -> n
 g (cnt, sum') = sum' / (fromIntegral cnt)
 
+-- An example of *structural recursion* (where empty and        --
+-- non-empty cases are handled separately):                     --
+
 h :: Fractional n => Int -> [n] -> [n]
-h a (x:xs) = (fromIntegral a * x):xs
+-- base /terminating case                                       --
+h _ [] = []
+-- inductive / recursive case                                   --
+h a (x:xs) = fromIntegral a * x:h a xs
+
+-- The previous function could be written in Python as:         --
+--                                                              --
+-- def h(self, a, list):                                        --
+--      if not list:                                            --
+--          return []                                           --
+--      return self.h(a * list[0], list[1:-1])                  --
+--                                                              --
+-- Because this is a recursive function that does no            --
+-- computation after the recursive call (or, the return         --
+-- statement), we say that it is *tail recursive*.              --
+
+-- Note that this is also a *primitive recursive* function.     --
+-- That means that an upper bound of the number of iterations   --
+-- can be determined before entering the loop, i.e. it can be   --
+-- written as a for loop:                                       --
+--                                                              --
+-- def h(self, a, list):                                        --
+--      res = []                                                --
+--      for each in list:                                       --
+--         res.append(each * a)                                 --
+--      return res                                              --
 
 -- Function parameters can be shadowed by let or where block.   --
 -- To detect shadowing use -Wname-shadowing switch in GHC.      --
