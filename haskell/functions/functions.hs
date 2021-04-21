@@ -110,3 +110,20 @@ f2 :: Int -> Int -> Int
 f2 m n = n + m
     where n = 5
 
+-- We can use the keyword "undefined" to create     --
+-- function stubs:                                  --
+
+unf :: Int -> Int
+unf = undefined
+
+-- Note that we can't use this function - it will   --
+-- crash the program.                               --
+
+-- We can omit the function parameter name - this   --
+-- is called point-free style.                      --
+
+notPointy :: Int -> Int
+notPointy = (*) 5
+
+-- This is the same as writing:                     --
+-- notPointy x = (*) 5 x                            --

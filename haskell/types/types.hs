@@ -1,3 +1,9 @@
+module Main where
+
+-- Has to begin with a capital letter and same name as file --
+-- containing it.                                           --
+import Cars
+
 main = do
     putStrLn $ show $ Person "Stjepan" "Poljak"
     putStrLn $ show $ realPerson
@@ -15,8 +21,12 @@ main = do
 
     printTree smallTree
 
+    putStrLn $ show $ myImaginaryCar
+    putStrLn $ show $ getSpeed myImaginaryCar
+
     where realPerson = RealPerson dev 34 Male
           dev = Person "Stjepan" "Poljak"
+          myImaginaryCar = Car "BWM" 200
 
 -- type synonyms                    --
 type Name       = String
@@ -78,7 +88,7 @@ instance Show RealPerson where
 -- data Maybe a = Just a | Nothing                          --
 
 -- Recursive types can be used to make list and tree-like   --
--- types.                                                   --
+-- structures.                                              --
 
 --                 left subtree                             --
 --                   |------|                               --
