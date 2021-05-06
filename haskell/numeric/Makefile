@@ -1,4 +1,4 @@
-proj=bits
+proj=numeric
 
 $(proj): $(proj).hs
 	ghc -dynamic -Wname-shadowing $<
